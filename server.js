@@ -8,9 +8,9 @@ app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL,
-   ).then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
 // Review Schema
 const ReviewSchema = new mongoose.Schema({
@@ -31,13 +31,13 @@ app.get("/api/reviews", async (req, res) => {
 
 app.post("/api/reviews", async (req, res) => {
     try {
-        const { name, rating, review } = req.body;
+        const { name, review, service, food, ambience, atmosphere } = req.body;
 
-        if (!name || !rating || !review) {
+        if (!name || !review || service === undefined || food === undefined || ambience === undefined || atmosphere === undefined) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
-        const newReview = new Review({ name, rating, review });
+        const newReview = new Review({ name, review, service, food, ambience, atmosphere });
         await newReview.save();
 
         res.status(201).json({ message: "Review added successfully!" });
