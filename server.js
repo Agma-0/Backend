@@ -4,8 +4,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
+
+// ✅ Middleware to parse JSON data
 app.use(express.json());
+
+// ✅ Middleware for handling CORS (important for frontend-backend communication)
 app.use(cors());
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URL)
@@ -49,3 +54,6 @@ app.post("/api/reviews", async (req, res) => {
 
 
 app.listen(process.env.PORT || 5000, () => console.log("🚀 Server running"));
+
+require("dotenv").config();
+console.log("🔍 MONGO_URL:", process.env.MONGO_URL);
