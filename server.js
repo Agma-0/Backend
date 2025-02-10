@@ -30,9 +30,22 @@ app.get("/api/reviews", async (req, res) => {
 });
 
 app.post("/api/reviews", async (req, res) => {
-    const newReview = new Review(req.body);
-    await newReview.save();
-    res.json({ message: "Review added!" });
+    try {
+        const { name, rating, review } = req.body;
+
+        if (!name || !rating || !review) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        const newReview = new Review({ name, rating, review });
+        await newReview.save();
+
+        res.status(201).json({ message: "Review added successfully!" });
+    } catch (error) {
+        console.error("Error saving review:", error);
+        res.status(500).json({ error: "Server error" });
+    }
 });
+
 
 app.listen(process.env.PORT || 5000, () => console.log("🚀 Server running"));
